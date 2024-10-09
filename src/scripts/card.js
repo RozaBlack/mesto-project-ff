@@ -1,4 +1,13 @@
-import { getTemplate, getElemFromTemplate } from "../index.js";
+
+// @todo: Темплейт карточки
+function getTemplate(templateID) {
+  return document.querySelector(templateID).content;
+}
+
+// @todo: DOM узлы
+function getElemFromTemplate(elemTemplate, elemClass) {
+  return elemTemplate.querySelector(elemClass).cloneNode(true);
+}
 
 // @todo: Функция создания карточки
 function createCard(
@@ -6,7 +15,8 @@ function createCard(
   cardTemplateID,
   cardElemClass,
   deleteCard,
-  likeCard
+  likeCard,
+  showImage
 ) {
   const cardTemplate = getTemplate(cardTemplateID);
   const cardElem = getElemFromTemplate(cardTemplate, cardElemClass);
@@ -22,6 +32,8 @@ function createCard(
 
   const likeButton = cardElem.querySelector(".card__like-button");
   likeButton.addEventListener("click", likeCard);
+
+  cardImage.addEventListener("click", () => {showImage(cardImage.src, cardImage.alt)});
 
   return cardElem;
 }
