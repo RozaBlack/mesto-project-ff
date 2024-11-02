@@ -46,12 +46,8 @@ function addCardToPage(initialCards, profileId) {
   });
 }
 
-function saveLoading(isLoading, button, textLoad, textFinal) {
-  if (!isLoading) {
+function saveLoading( button, textLoad) {
     button.textContent = textLoad;
-  } else {
-    button.textContent = textFinal;
-  }
 }
 
 // Подтверждение удаления карточки
@@ -119,21 +115,21 @@ function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
   const name = nameInput.value;
-  const job = jobInput.value;
+  const about = jobInput.value;
 
-  updateProfileInfo(name, job)
+  saveLoading(popupTypeEditButton, "Сохранение...");
+  updateProfileInfo(name, about)
     .then((res) => {
       profileTitle.textContent = res.name;
-      profileDescription.textContent = res.job;
+      profileDescription.textContent = res.about;
+      closePopup(popupTypeEdit);
     })
     .catch((err) => {
       console.log(`Error: ${err}`);
     })
     .finally(() => {
-      saveLoading(false, popupTypeEditButton, "Сохранение...", "Сохранить");
+      saveLoading(popupTypeEditButton, "Сохранить");
     });
-
-  closePopup(popupTypeEdit);
 }
 
 editProfileFormElement.addEventListener("submit", handleProfileFormSubmit);
@@ -166,18 +162,18 @@ function handleProfileImageFormSubmit(evt) {
 
   const profileImageUrl = profileImageUrlInput.value;
 
+  saveLoading(popupTypeAvatarButton, "Сохранение...");
   updateProfileImage(profileImageUrl)
     .then((res) => {
       profileImage.style.backgroundImage = res.avatar;
+      closePopup(popupTypeAvatar);
     })
     .catch((err) => {
       console.log(`Error: ${err}`);
     })
     .finally(() => {
-      saveLoading(false, popupTypeAvatarButton, "Сохранение...", "Сохранить");
+      saveLoading(popupTypeAvatarButton, "Сохранить");
     });
-
-  closePopup(popupTypeAvatar);
 }
 
 editAvatarFormElement.addEventListener("submit", handleProfileImageFormSubmit);
@@ -214,6 +210,8 @@ function addCardToCardsList(evt) {
 
   const name = cardNameInput.value;
   const link = pictureUrlInput.value;
+
+  saveLoading(popupTypeNewCardButton, "Создание...");
   addNewCard(name, link)
     .then((card) => {
       const cardElem = createCard(
@@ -229,12 +227,12 @@ function addCardToCardsList(evt) {
         profileId
       );
       cardsList.prepend(cardElem);
+      newCardFormElement.reset();
       closePopup(popupTypeNewCard);
     })
     .catch((err) => console.log(err))
     .finally(() => {
-      newCardFormElement.reset();
-      saveLoading(false, popupTypeNewCardButton, "Создание...", "Создать");
+      saveLoading(popupTypeNewCardButton, "Создать");
     });
 }
 
@@ -264,7 +262,7 @@ enableValidation(validationConfig);
 //-------------------------------------------------------------------------------//
 let profileId;
 
-getInitials().then(([getInitialProfileInfo, getInitialCards]) => {
+const [getInitialProfileInfo, getInitialCards] = getInitials();
   Promise.all([getInitialProfileInfo(), getInitialCards()])
     .then(([userInfo, initialCards]) => {
       profileTitle.textContent = userInfo.name;
@@ -275,4 +273,3 @@ getInitials().then(([getInitialProfileInfo, getInitialCards]) => {
       addCardToPage(initialCards, profileId);
     })
     .catch((err) => console.log(err));
-});

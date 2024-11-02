@@ -17,19 +17,19 @@ function getFormInfo(infoAddres) {
   return fetch(`${apiConfig.baseURL}/${infoAddres}`, {
     method: "GET",
     headers: apiConfig.headers,
-  }).then((res) => checkFormInfo(res));
+  }).then(checkFormInfo);
 }
 
 function getInitialProfileInfo() {
-  return Promise.resolve(getFormInfo("users/me"));
+  return getFormInfo("users/me");
 }
 
 function getInitialCards() {
-  return Promise.resolve(getFormInfo("cards"));
+  return getFormInfo("cards");
 }
 
 export function getInitials() {
-  return Promise.all([getInitialProfileInfo, getInitialCards]);
+  return [getInitialProfileInfo, getInitialCards];
 }
 
 export function updateProfileInfo(name, about) {
@@ -40,7 +40,7 @@ export function updateProfileInfo(name, about) {
       name: name,
       about: about,
     }),
-  }).then((res) => checkFormInfo(res));
+  }).then(checkFormInfo);
 }
 
 export function updateProfileImage(link) {
@@ -50,7 +50,7 @@ export function updateProfileImage(link) {
     body: JSON.stringify({
       avatar: link,
     }),
-  }).then((res) => checkFormInfo(res));
+  }).then(checkFormInfo);
 }
 
 export function addNewCard(name, link) {
@@ -61,26 +61,26 @@ export function addNewCard(name, link) {
       name: name,
       link: link,
     }),
-  }).then((res) => checkFormInfo(res));
+  }).then(checkFormInfo);
 }
 
 export function deleteCardAtServer(id) {
   return fetch(`${apiConfig.baseURL}/cards/${id}`, {
     method: "DELETE",
     headers: apiConfig.headers,
-  }).then((res) => checkFormInfo(res));
+  }).then(checkFormInfo);
 }
 
 export function addLikeToCard(id) {
   return fetch(`${apiConfig.baseURL}/cards/likes/${id}`, {
     method: "PUT",
     headers: apiConfig.headers,
-  }).then((res) => checkFormInfo(res));
+  }).then(checkFormInfo);
 }
 
 export function deleteLikeFromCard(id) {
   return fetch(`${apiConfig.baseURL}/cards/likes/${id}`, {
     method: "DELETE",
     headers: apiConfig.headers,
-  }).then((res) => checkFormInfo(res));
+  }).then(checkFormInfo);
 }
